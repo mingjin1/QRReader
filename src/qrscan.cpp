@@ -33,6 +33,8 @@ int main(int argc, char** argv){
 		cout << "Not enough parameters" << endl;
 		return -1;
 	}
+	std::string textResult = TXTREC_ERROR;
+	std::string decoded = QR_ERROR;
 	const string fileDest = argv[1];
 	int delay, startingFrame;
 	stringstream conv;
@@ -64,8 +66,8 @@ int main(int argc, char** argv){
 	Mat gray(image.size(), CV_MAKETYPE(image.depth(), 1));			// To hold Grayscale Image
 	Mat edges(image.size(), CV_MAKETYPE(image.depth(), 1));			// To hold Grayscale Image
 	Mat traces(image.size(), CV_8UC3);								// For Debug Visuals
-	Mat qr,qr_raw,qr_gray,qr_thres;
-
+	Mat qr,qr_raw,qr_gray,qr_thres, text_area;
+	int fontFace = FONT_HERSHEY_PLAIN;
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 
@@ -285,9 +287,9 @@ int main(int argc, char** argv){
 					circle( traces, M[2], 2,  Scalar(0,0,255), -1, 8, 0 );
 					circle( traces, M[3], 2,  Scalar(128,128,128), -1, 8, 0 );
 
-					circle( traces, O[0], 2,  Scalar(255,255,0), -1, 8, 0 );
+					/*circle( traces, O[0], 2,  Scalar(255,255,0), -1, 8, 0 );
 					circle( traces, O[1], 2,  Scalar(0,255,0), -1, 8, 0 );
-					circle( traces, O[2], 2,  Scalar(0,0,255), -1, 8, 0 );
+					circle( traces, O[2], 2,  Scalar(0,0,255), -1, 8, 0 );*/
 					circle( traces, O[3], 2,  Scalar(128,128,128), -1, 8, 0 );
 
 					// Draw point of the estimated 4th Corner of (entire) QR Code
@@ -296,10 +298,10 @@ int main(int argc, char** argv){
 					// Draw the lines used for estimating the 4th Corner of QR Code
 					line(traces,M[1],N,Scalar(0,0,255),1,8,0);
 					line(traces,O[3],N,Scalar(0,0,255),1,8,0);
-					rectangle(image, L[0], N, Scalar(255,0,0), 2, 8, 0);
+
 
 					// Show the Orientation of the QR Code wrt to 2D Image Space
-					int fontFace = FONT_HERSHEY_PLAIN;
+
 
 					if(orientation == CV_QR_NORTH)
 					{
@@ -317,9 +319,32 @@ int main(int argc, char** argv){
 					{
 						putText(traces, "WEST", Point(20,30), fontFace, 1, Scalar(0, 255, 0), 1, 8);
 					}
-					string decoded = qrdecode::decodeQR(qr_gray);
+					decoded = qrdecode::decodeQR(qr_gray);
 					if(decoded != QR_ERROR){
-						//delay = 1;
+						// Draw the bounding box of the QR code using the estimated 4th corner on top of the raw image
+						rectangle(image, L[0], N, Scalar(255,0,0), 2, 8, 0);
+						float distance = cv_distance(O[3], N);
+						//Point textBoxBottomPoint = Point(N.x-(distance*0.5),(N.y+distance)); TODO: Spatial awareness to not go off the pic.
+						//Point textBoxTopPoint = Point(O[3].x+(distance*0.5), O[3].y); TODO: Spatial awareness to not go off the pic.
+						try{
+							Point textBoxBottomPoint = Point(N.x,(N.y+distance));// Assuming the text is below the QR code.
+							Point textBoxTopPoint = Point(O[3].x, O[3].y);/*		TODO: add text detection around the code.
+																					TODO: go a bit below the so it doesn't pick up part of the qr code
+																				*/
+							text_area = image(cv::Rect(textBoxBottomPoint, textBoxTopPoint));
+							textResult = textRead(text_area);
+							if(textResult != TXTREC_ERROR)
+							{
+								putText(image, textResult, textBoxBottomPoint, fontFace, 1, Scalar(0, 255, 0), 2, 8);
+								delay = 300;
+							}
+							else{
+								delay = 1;
+							}
+						}
+						catch(cv::Exception& e){
+							textResult = TXTREC_ERROR;
+						}
 					}
 					else{
 						delay = atoi(argv[2]);
@@ -335,7 +360,9 @@ int main(int argc, char** argv){
 		imshow ( "Image", image );
 		imshow ( "Traces", traces );
 		imshow ( "QR code", qr_thres );
-
+		if(textResult != TXTREC_ERROR){ // TODO Make a state machine for when text is found
+			imshow ( "text_area", text_area );
+		}
 		key = waitKey(delay);	// OPENCV: wait for 1ms before accessing next frame
 
 		capture >> image;						// Capture Image from Image Input

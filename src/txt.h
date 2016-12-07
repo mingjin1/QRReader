@@ -9,4 +9,4 @@
 #ifndef SRC_TXT_H_
 #define SRC_TXT_H_
 #endif /* SRC_TXT_H_ */
-std::string testproc(cv::Mat matTestingImage);
+std::string textRead(cv::Mat matTestingImage);

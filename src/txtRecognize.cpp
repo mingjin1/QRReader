@@ -42,7 +42,7 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-std::string testproc(cv::Mat matTestingImage) {
+std::string textRead(cv::Mat matTestingImage) {
     std::vector<ContourWithData> allContoursWithData;           // declare empty vectors,
     std::vector<ContourWithData> validContoursWithData;         // we will fill these shortly
 
@@ -169,11 +169,11 @@ std::string testproc(cv::Mat matTestingImage) {
 
     std::cout << "\n\n" << "numbers read = " << strFinalString << "\n\n";       // show the full string
 
-    cv::imshow("matTestingNumbers", matTestingImage);     // show input image with green boxes drawn around found digits
+    //cv::imshow("matTestingNumbers", matTestingImage);     // show input image with green boxes drawn around found digits
 
-    cv::waitKey(0);                                         // wait for user key press
+    //cv::waitKey(0);                                         // wait for user key press
 
-    return(TXTREC_SUCCESS);
+    return(strFinalString);
 }
 
 
