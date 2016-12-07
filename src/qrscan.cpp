@@ -38,10 +38,6 @@ int main(int argc, char** argv){
 	stringstream conv;
 	delay = atoi(argv[2]);
 	startingFrame = atoi(argv[3]);
-	if(delay == -2){
-		testproc();
-		return 0;
-	}
 	int frameNum = -1;
 	VideoCapture capture(fileDest);
 
@@ -300,7 +296,7 @@ int main(int argc, char** argv){
 					// Draw the lines used for estimating the 4th Corner of QR Code
 					line(traces,M[1],N,Scalar(0,0,255),1,8,0);
 					line(traces,O[3],N,Scalar(0,0,255),1,8,0);
-
+					rectangle(image, L[0], N, Scalar(255,0,0), 2, 8, 0);
 
 					// Show the Orientation of the QR Code wrt to 2D Image Space
 					int fontFace = FONT_HERSHEY_PLAIN;
@@ -323,7 +319,7 @@ int main(int argc, char** argv){
 					}
 					string decoded = qrdecode::decodeQR(qr_gray);
 					if(decoded != QR_ERROR){
-						delay = 1;
+						//delay = 1;
 					}
 					else{
 						delay = atoi(argv[2]);
