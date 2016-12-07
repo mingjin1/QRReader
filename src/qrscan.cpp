@@ -84,6 +84,9 @@ int main(int argc, char** argv){
         if (image.empty())
         {
             cout << " < < <  Game over!  > > > \n";
+            cout << "Last found text was: " << textResult << "\n"; //TODO read actual result into a different string
+            													//	and array perhaps, so the variance can be eliminated, by getting only x characters
+            													//	and disregarding the ones that are varying
             break;
         }
         cout << "Frame: #" << frameNum << " ";
