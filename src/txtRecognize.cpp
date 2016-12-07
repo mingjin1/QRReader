@@ -12,6 +12,7 @@
 
 #include<iostream>
 #include<sstream>
+#include "txt.h"
 
 // global variables ///////////////////////////////////////////////////////////////////////////////
 const int MIN_CONTOUR_AREA = 100;
@@ -41,7 +42,7 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-int testproc() {
+std::string testproc(cv::Mat matTestingImage) {
     std::vector<ContourWithData> allContoursWithData;           // declare empty vectors,
     std::vector<ContourWithData> validContoursWithData;         // we will fill these shortly
 
@@ -53,7 +54,7 @@ int testproc() {
 
     if (fsClassifications.isOpened() == false) {                                                    // if the file was not opened successfully
         std::cout << "error, unable to open training classifications file, exiting program\n\n";    // show error message
-        return(0);                                                                                  // and exit program
+        return(TXTREC_ERROR);                                                                                  // and exit program
     }
 
     fsClassifications["classifications"] >> matClassificationInts;      // read classifications section into Mat classifications variable
@@ -67,7 +68,7 @@ int testproc() {
 
     if (fsTrainingImages.isOpened() == false) {                                                 // if the file was not opened successfully
         std::cout << "error, unable to open training images file, exiting program\n\n";         // show error message
-        return(0);                                                                              // and exit program
+        return(TXTREC_ERROR);                                                                              // and exit program
     }
 
     fsTrainingImages["images"] >> matTrainingImagesAsFlattenedFloats;           // read images section into Mat training images variable
@@ -83,11 +84,9 @@ int testproc() {
 
             // test ///////////////////////////////////////////////////////////////////////////////
 
-    cv::Mat matTestingNumbers = cv::imread("../data/text.png");            // read in the test numbers image
-
-    if (matTestingNumbers.empty()) {                                // if unable to open image
+    if (matTestingImage.empty()) {                                // if unable to open image
         std::cout << "error: image not read from file\n\n";         // show error message on command line
-        return(0);                                                  // and exit program
+        return(TXTREC_ERROR);                                                  // and exit program
     }
 
     cv::Mat matGrayscale;           //
@@ -95,7 +94,7 @@ int testproc() {
     cv::Mat matThresh;              //
     cv::Mat matThreshCopy;          //
 
-    cv::cvtColor(matTestingNumbers, matGrayscale, CV_BGR2GRAY);         // convert to grayscale
+    cv::cvtColor(matTestingImage, matGrayscale, CV_BGR2GRAY);         // convert to grayscale
 
                                             // blur
     cv::GaussianBlur(matGrayscale,              // input image
@@ -144,7 +143,7 @@ int testproc() {
     for (int i = 0; i < validContoursWithData.size(); i++) {            // for each contour
 
                                                                 // draw a green rect around the current char
-        cv::rectangle(matTestingNumbers,                            // draw rectangle on original image
+        cv::rectangle(matTestingImage,                            // draw rectangle on original image
                       validContoursWithData[i].boundingRect,        // rect to draw
                       cv::Scalar(0, 255, 0),                        // green
                       2);                                           // thickness
@@ -170,11 +169,11 @@ int testproc() {
 
     std::cout << "\n\n" << "numbers read = " << strFinalString << "\n\n";       // show the full string
 
-    cv::imshow("matTestingNumbers", matTestingNumbers);     // show input image with green boxes drawn around found digits
+    cv::imshow("matTestingNumbers", matTestingImage);     // show input image with green boxes drawn around found digits
 
     cv::waitKey(0);                                         // wait for user key press
 
-    return(0);
+    return(TXTREC_SUCCESS);
 }
 
 

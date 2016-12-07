@@ -6,6 +6,7 @@
  */
 
 #include "qrscan.h"
+#include "txt.h"
 
 using namespace cv;
 using namespace std;
