@@ -25,6 +25,5 @@
 #include <zxing/MultiFormatReader.h>
 #include "zxing/MatSource.h"
 #include "qrdecode.h"
-int textlearn();
 int testproc();
 
