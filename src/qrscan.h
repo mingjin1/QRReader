@@ -9,8 +9,6 @@
 #include <opencv2/text.hpp>
 #include <iostream>
 #include <sstream>
-#include <cmath>
-#include <vector>
 #include <zxing/common/Counted.h>
 #include <zxing/Binarizer.h>
 #include <zxing/MultiFormatReader.h>

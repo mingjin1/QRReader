@@ -37,10 +37,7 @@ int main(int argc, char** argv){
 	stringstream conv;
 	delay = atoi(argv[2]);
 	startingFrame = atoi(argv[3]);
-	if(delay == -1){
-		textlearn();
-		return 0;
-	}else if(delay == -2){
+	if(delay == -2){
 		testproc();
 		return 0;
 	}
