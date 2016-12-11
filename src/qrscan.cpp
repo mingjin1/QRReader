@@ -339,7 +339,7 @@ int main(int argc, char** argv){
 							if(textResult != TXTREC_ERROR)
 							{
 								putText(image, textResult, textBoxBottomPoint, fontFace, 1, Scalar(0, 255, 0), 2, 8);
-								delay = 300;
+								delay = 10000;
 							}
 							else{
 								delay = 1;

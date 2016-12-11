@@ -9,9 +9,10 @@
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
 #include<opencv2/ml/ml.hpp>
-
+#include<vector>
 #include<iostream>
 #include<sstream>
+#include <array>
 #include "txt.h"
 
 // global variables ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,14 @@ const int MIN_CONTOUR_AREA = 100;
 
 const int RESIZED_IMAGE_WIDTH = 20;
 const int RESIZED_IMAGE_HEIGHT = 30;
-
+class TxtMatrix{
+	public:
+		char character;
+		int pos;
+		int occurances;
+};
+std::vector<TxtMatrix> txtMatrix;
+std::array<std::pair<std::string, int>, 3> test{{"a", 1}, {"b", 2}, {"c", 3}};
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 class ContourWithData {
 public:
@@ -177,4 +185,8 @@ std::string textRead(cv::Mat matTestingImage) {
 }
 
 
-
+void recordTxt(char letter, char pos){
+	/*int cc = test[letter][pos];
+	char occ = (char)cc;
+	test[letter][pos][occ];*/
+}
