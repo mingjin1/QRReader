@@ -27,7 +27,6 @@ class TxtMatrix{
 		int occurances;
 };
 std::vector<TxtMatrix> txtMatrix;
-std::array<std::pair<std::string, int>, 3> test{{"a", 1}, {"b", 2}, {"c", 3}};
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 class ContourWithData {
 public:
@@ -185,8 +184,17 @@ std::string textRead(cv::Mat matTestingImage) {
 }
 
 
-void recordTxt(char letter, char pos){
-	/*int cc = test[letter][pos];
-	char occ = (char)cc;
-	test[letter][pos][occ];*/
+void recordTxt(char letter, int pos){
+	TxtMatrix current;
+	current.character = letter;
+	current.pos = pos;
+	auto it = std::find_if(txtMatrix.begin(), txtMatrix.end(), [&current](const TxtMatrix& obj) { return (obj.character==current.character && obj.pos==current.pos); });
+	//TxtMatrix avg = std::accumulate(txtMatrix.begin(), txtMatrix.end(), current)/txtMatrix.size();
+	if(it != txtMatrix.end()){
+		auto index = std::distance(txtMatrix.begin(), it);
+		std::cout << index;
+		//int occurances = it.occurances;
+	}
+	/*if(match!= std::end(txtMatrix)){
+	}*/
 }
